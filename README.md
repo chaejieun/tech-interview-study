@@ -27,17 +27,25 @@
 
 ## ✍️ 스터디 주제
 
+담당자: Chae
+
+- Algorithm
 - CS (Computer Science)
 - Data Structure
 - Database
-- Network
-- Operating System
-- Algorithm
-- Web
-- Software Engineering
+
+담당자: Hybin
+
 - Design Pattern
-- Programming Language
 - ETC (기타)
+- Language
+- Network
+
+담당자: Juhui
+
+- Operating System
+- Software Engineering
+- Web
 
 ---
 
