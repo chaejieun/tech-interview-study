@@ -34,7 +34,7 @@
 - Data Structure
 - Database
 
-담당자: Hybin
+담당자: Hyebin
 
 - Design Pattern
 - ETC (기타)
@@ -64,6 +64,7 @@ https://github.com/bining93/Interview_Question_for_Beginner
 | :----- | :--------------------------------------------- |
 | 채채   | [@chaejieun](https://github.com/chaejieun)     |
 | 주희정 | [@juhui-jeong](https://github.com/juhui-jeong) |
+| 혜빈 | []) |
 
 ---
 
