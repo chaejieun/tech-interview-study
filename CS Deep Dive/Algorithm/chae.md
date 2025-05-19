@@ -394,3 +394,145 @@ public class Main {
 9
 ```
 ---
+
+# 📅 2025/05/19
+# 거품 정렬(Bubble Sort)란?
+- 인접한 두 요소를 비교하여 의도한 순서가 될 때까지 교체하는 정렬 알고리즘.
+
+### 동작과정
+- 배열의 처음부터 끝까지 인접한 두 요소를 비교
+- 앞 요소가 뒷 요소보다 크면 두 요소를 교환
+- 이렇게 한 바퀴 돌면 가장 큰 값이 배열의 끝으로 이동
+- 위 과정을 전체 길이 - 1 만큼 반복
+
+### 시간복잡도
+- **O(n²)**
+
+
+### 예제
+```java
+public class BubbleSortExample {
+    public static void bubbleSort(int[] arr) {
+        int n = arr.length;
+        boolean swapped;
+
+        // 총 n-1번 반복
+        for (int i = 0; i < n - 1; i++) {
+            swapped = false;
+
+            // 인접한 요소 비교 및 스왑
+            for (int j = 0; j < n - 1 - i; j++) {
+                if (arr[j] > arr[j + 1]) {
+                    // swap
+                    int temp = arr[j];
+                    arr[j] = arr[j + 1];
+                    arr[j + 1] = temp;
+
+                    swapped = true;
+                }
+            }
+
+            // 만약 한 번도 swap 안 했다면 이미 정렬된 상태 → 종료
+            if (!swapped) break;
+        }
+    }
+
+    public static void main(String[] args) {
+        int[] numbers = {5, 2, 9, 1, 5, 6};
+        bubbleSort(numbers);
+        for (int num : numbers) {
+            System.out.print(num + " ");
+        }
+    }
+}
+```
+---
+# 선택 정렬(Selection Sort)란?
+- 배열에서 가장 작은(또는 큰) 값을 선택해서 정렬되지 않은 영역의 맨 앞과 교환하는 방식
+
+## 동작과정
+- 전체 배열 중 가장 작은 값을 찾아 첫 번째 요소와 교환
+- 그 다음 작은 값을 찾아 두 번째 요소와 교환
+- 이를 배열 끝까지 반복
+
+## 시간복잡도
+**O(n²)**
+
+## 예제
+```java
+public class SelectionSortExample {
+    public static void selectionSort(int[] arr) {
+        int n = arr.length;
+
+        // 마지막 요소는 자동으로 정렬됨
+        for (int i = 0; i < n - 1; i++) {
+            int minIndex = i;
+
+            // 최소값의 인덱스를 찾는다
+            for (int j = i + 1; j < n; j++) {
+                if (arr[j] < arr[minIndex]) {
+                    minIndex = j;
+                }
+            }
+
+            // 현재 위치와 최소값 위치 교환
+            int temp = arr[minIndex];
+            arr[minIndex] = arr[i];
+            arr[i] = temp;
+        }
+    }
+
+    public static void main(String[] args) {
+        int[] numbers = {64, 25, 12, 22, 11};
+        selectionSort(numbers);
+        for (int num : numbers) {
+            System.out.print(num + " ");
+        }
+    }
+}
+```
+
+---
+
+# 삽입 정렬(Insertion Sort)란?
+- 데이터를 **하나씩 꺼내서 앞쪽에 정렬된 데이터들과 비교해 알맞은 위치에 '삽입'**하는 방식
+
+## 동작과정
+- 두 번째 원소부터 시작해서 앞쪽 원소들과 비교
+- 앞의 원소가 크면 한 칸씩 뒤로 밀고
+- 삽입할 위치를 찾으면 그 자리에 삽입
+
+## 시간복잡도
+**O(n2)**
+
+## 예제
+```java
+public class InsertionSortExample {
+    public static void insertionSort(int[] arr) {
+        int n = arr.length;
+
+        for (int i = 1; i < n; i++) {
+            int key = arr[i];       // 삽입할 값
+            int j = i - 1;
+
+            // key보다 큰 값을 오른쪽으로 이동
+            while (j >= 0 && arr[j] > key) {
+                arr[j + 1] = arr[j];
+                j--;
+            }
+
+            // key를 삽입할 위치에 넣는다
+            arr[j + 1] = key;
+        }
+    }
+
+    public static void main(String[] args) {
+        int[] arr = {5, 2, 4, 6, 1, 3};
+        insertionSort(arr);
+        for (int num : arr) {
+            System.out.print(num + " ");
+        }
+    }
+}
+```
+
