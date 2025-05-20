@@ -131,7 +131,7 @@
 - 깊이(depth) : 루트에서 어떤 노드까지의 간선 수로, 레벨(Level)이라고도 한다.
 - 높이(height) : 트리의 최대 깊이
 
-![alt text](image.png)
+![alt text](./img/image.png)
 
 ## 트리의 특징
 - 부모 자식 관계를 가지는 계층형 자료구조 로, 방향성이 있으며, 모든 자식 노드는 하나의 부모 노드만 갖는다.
@@ -142,28 +142,28 @@
 # 이진트리(Binary Tree)
 - 모든 노드들이 둘 이하의 자식을 가진 트리이다.
 
-![alt text](image-1.png)
+![alt text](./img/image-1.png)
 
 # 이진 탐색 트리(Binary Search Tree)
 - 정렬된 이진 트리
 - 노드의 왼쪽 자식은 부모 노드보다 작은 값, 오른쪽 자식은 부모 노드보다 큰 값을 갖는다.
-![alt text](image-2.png)
+![alt text](./img/image-2.png)
 
 ## 이진 탐색 트리 특징
 1. BST의 Inorder Traversal을 수행하여 모든 키를 정렬된 순서로 가져올 수 있다.
-![alt text](image-3.png)
+![alt text](./img/image-3.png)
 위 트리의 inorder traversal의 결과는 다음과 같다.
 7, 11, 15, 50, 54, 62, 80
 
 2.  BST의 검색에 대한 시간복잡도는 균형 상태이면 O(logN)의 시간이 걸리고 불균형 상태라면 최대 O(N) 시간이 걸립니다.
-![alt text](image-4.png) 
-![alt text](image-5.png)
+![alt text](./img/image-4.png) 
+![alt text](./img/image-5.png)
 
 # AVL Tree
 - AVL Tree는 균형 이진 탐색 트리(Self-balancing Binary Search Tree)의 일종으로, 트리의 높이를 항상 일정하게 유지하여 탐색, 삽입, 삭제 연산에서 O(log n)의 성능을 보장하는 자료구조입니다.
 - AVL 트리는 삽입이나 삭제가 발생할 때마다 트리의 균형을 유지하기 위해 회전(Rotation) 연산을 사용합니다. 이러한 균형 유지 메커니즘 덕분에, 비균형 트리로 인한 성능 저하를 방지할 수 있습니다.
 
-![alt text](image-6.png)
+![alt text](./img/image-6.png)
 
 ## AVL Tree 특징
 1. 균형 인수
