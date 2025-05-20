@@ -51,9 +51,9 @@
 
 ## 📌 참고 자료
 
-https://github.com/da-in/tech-interview-study/tree/main
-https://github.com/ksundong/backend-interview-question
-https://github.com/bining93/Interview_Question_for_Beginner
+- https://github.com/da-in/tech-interview-study/tree/main
+- https://github.com/ksundong/backend-interview-question
+- https://github.com/bining93/Interview_Question_for_Beginner
 
 ---
 
