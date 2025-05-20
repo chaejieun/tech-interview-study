@@ -63,7 +63,7 @@
 | :----- | :--------------------------------------------- |
 | 채채   | [@chaejieun](https://github.com/chaejieun)     |
 | 주희정 | [@juhui-jeong](https://github.com/juhui-jeong) |
-| 혜빈 | [@bining93(https://github.com/bining93)]) |
+| 혜빈 | [@bining93](https://github.com/bining93) |
 
 ---
 
