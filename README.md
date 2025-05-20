@@ -52,7 +52,6 @@
 ## 📌 참고 자료
 
 https://github.com/da-in/tech-interview-study/tree/main
-https://github.com/chaejieun/tech-interview-study
 https://github.com/ksundong/backend-interview-question
 https://github.com/bining93/Interview_Question_for_Beginner
 
@@ -64,7 +63,7 @@ https://github.com/bining93/Interview_Question_for_Beginner
 | :----- | :--------------------------------------------- |
 | 채채   | [@chaejieun](https://github.com/chaejieun)     |
 | 주희정 | [@juhui-jeong](https://github.com/juhui-jeong) |
-| 혜빈 | []) |
+| 혜빈 | [@bining93(https://github.com/bining93)]) |
 
 ---
 
