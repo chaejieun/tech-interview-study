@@ -70,8 +70,7 @@ Java에서는 생성자를 **private**으로 선언하고, 정적 메서드인 *
 <br>
 
 ## 브릿지(Bridge) 패턴의 구조
-![alt text](image.png)
-
+![alt text](./img/image.png)
 - Abstraction: 기능의 추상적 정의, 구현체를 참조함
 - RefinedAbstraction: Abstraction을 확장한 구체 클래스
 - Implementor: 구현부의 인터페이스 정의
@@ -219,3 +218,194 @@ public class PaymentService {
     }
 }
 ```
+
+
+
+# 📅 2025/05/22
+# Builder 패턴에 대해서 설명해주세요
+- 빌더 패턴은 디자인 패턴 중 하나로 **생성(Creational) 패턴** 중 하나 입니다.
+- 빌더 패턴이란 복잡한 객체를 생성하는 방법 중 하나로, 객체의 생성 코드와 객체의 사용 코드를 분리하여 코드의 가독성과 유지 보수성을 향상시키는 패턴
+
+- 복잡한 객체의 생성 과정을 단계별로 나누어 클라이언트가 이해하기 쉽도록 인터페이스를 제공하는 것이 빌더 패턴의 핵심입니다.
+- 특히 복잡한 객체를 생성해야하는 상황에서 유용하며, DTO와 같은 복잡한 객체 생성에 사용하면 많은 이점을 제공합니다.
+
+## 🔍 예제
+### Java에서의 빌더 패턴 구현 방법
+- 빌더 클래스를 선언하고, 생성할 객체의 속성에 대한 setter 메서드를 구현합니다.
+- 이 메서드들은 빌더 객체 자신을 반환하므로 메서드 체이닝이 가능합니다. 또한 build 메서드를 통해 최종적인 객체를 생성합니다.
+
+```java
+public class User {
+    private String name;
+    private int age;
+    
+    public static class Builder {
+        private String name;
+        private int age;
+        
+        public Builder withName(String name) {
+            this.name = name;
+            return this;
+        }
+        
+        public Builder withAge(int age) {
+            this.age = age;
+            return this;
+        }
+        
+        public User build() {
+            User user = new User();
+            user.name = this.name;
+            user.age = this.age;
+            return user;
+        }
+    }
+    
+    public static void main(String[] args) {
+        User user = new User.Builder()
+                    .withName("Henry")
+                    .withAge(30)
+                    .build();
+    }
+}
+```
+
+- Lombok 라이브러리의 @Builder 어노테이션을 사용하여 빌더 패턴을 간단하게 구현할 수 있습니다.
+```java
+@Builder
+@Getter
+@Setter
+public class User {
+    private String name;
+    private int age;
+}
+
+public static void main(String[] args) {
+    User user = User.builder()
+                    .name("Henry")
+                    .age(30)
+                    .build();
+}
+```
+
+# Factory Method 패턴에 대해서 설명해주세요.
+- 팩토리 메소드 패턴은 생성 패턴 중 하나로 객체를 생성할 때 어떤 클래스의 인스턴스를 만들 지 서브 클래스에서 결정하게 합니다.
+- 즉, 인스턴스 생성을 서브 클래스에게 위임합니다.
+- 부모 추상 클래스는 인터페이스에만 의존하고 실제로 어떤 구현 클래스를 호출할 지는 서브 클래스에서 구현합니다.
+
+## 구조
+    Creator (추상 클래스 / 인터페이스)
+                   |
+          ---------------------
+          |                   |
+ConcreteCreatorA       ConcreteCreatorB
+          |                   |
+       ProductA            ProductB
+
+
+## 🔍 예제
+### Java에서의 팩토리 메소드 패턴 구현 방법       
+```java
+
+// Product
+interface Animal {
+    void speak();
+}
+
+// ConcreteProduct
+class Dog implements Animal {
+    public void speak() {
+        System.out.println("멍멍!");
+    }
+}
+
+class Cat implements Animal {
+    public void speak() {
+        System.out.println("야옹~");
+    }
+}
+
+// Creator
+abstract class AnimalFactory {
+    public abstract Animal createAnimal();
+}
+
+// ConcreteCreator
+class DogFactory extends AnimalFactory {
+    public Animal createAnimal() {
+        return new Dog();
+    }
+}
+
+class CatFactory extends AnimalFactory {
+    public Animal createAnimal() {
+        return new Cat();
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        AnimalFactory factory = new DogFactory();  // 바꾸면 Cat도 가능
+        Animal animal = factory.createAnimal();
+        animal.speak();  // 출력: 멍멍!
+    }
+}
+```
+
+## 장단점
+- 장점: Factory Method 패턴의 가장 큰 장점은 지금까지 본 것처럼 수정에 닫혀있고 확장에는 열려있는 OCP 원칙을 지킬 수 있음
+- 단점: 간단한 기능을 사용할 때보다 많은 클래스를 정의해야 하기 때문에 코드량이 증가한다
+
+
+# 퍼사드 패턴에 대한 예를 들어주세요.
+- 퍼사드 패턴(Facade Pattern)은 구조 패턴(Structural Pattern)의 한 종류로써, 복잡한 서브 클래스들의 공통적인 기능을 정의하는 상위 수준의 인터페이스를 제공하는 패턴이다.
+
+- 퍼사드 객체(Facade Object)는 서브 클래스의 코드에 의존하는 일을 감소시켜 주고, 복잡한 소프트웨어를 간단히 사용 할 수 있게 간단한 인터페이스를 제공해준다.
+
+- 퍼사드 패턴을 통해 서브 시스템(SubSystem)들 간의 종속성을 줄여줄 수 있으며, 퍼사드 객체를 사용하는 곳(Client)에서는 여러 서브 클래스들을 호출할 필요 없이 편리하게 사용할 수 있다.
+
+
+## Facade Pattern
+
+![alt text](./img/image-1.png)
+- 여러 SubSystem들의 기능을 하나의 Facade Object로 정의하고, Client가 Facade Object를 사용하는 형태이다.
+
+![alt text](./img/image-2.png)
+- 세탁를 하기 위해서는 크게 Washing, Rinsing, Spinning과 같은 동작들이 필요하다. 이들은 SubSystem들로써, Facade Object를 통해 '세탁'이라는 행위에 필요한 공통 기능들을 정의할 수 있다.
+
+
+## 🔍 예제
+### Java에서의 Facade 패턴 구현 방법  
+```java
+WashingMachine
+class WashingMachine{
+
+    Washing washing = new Washing();
+    Rinsing rinsing = new Rinsing();
+    Spinning spinning = new Spinning();
+
+	void startWashing(){
+    	washing.wash();
+        rinsing.rinse();
+        spinning.spin();
+    }
+}
+Client
+class Client{
+    WashingMachine washingMachine = new WashingMachine();
+    washingMachine.strartWahsing();
+}
+```
+- Client에서는 Facade Object(WashingMachine)만을 호출하여 '세탁'이라는 동작을 수행할 수 있으며, 메서드의 의미 또한 명확하게 알 수 있다.
+
+## 장단점
+- 낮은 결합도 :
+Client가 서브 시스템(SubSystem)들의 코드를 몰라도 된다. Facade Object만 알면 사용이 가능하다. 또한 서브 시스템들간의 복잡한 결합도 역시 낮출 수 있다.
+- 가독성 상승
+기존에는 Client에서 여러 서브 클래스들을 직접 호출해야 했다.
+하지만 Facade Pattern을 사용하면 하나의 객체만을 호출하여 사용할 수 있고, 그 객체의 네이밍 역시 간단명료할 수밖에 없다.
+
+- 서브 시스템 기능을 완전히 감추는 경우 유연성이 떨어질 수 있음
+- 퍼사드 클래스가 비대해질 수 있음
+
+--- 
