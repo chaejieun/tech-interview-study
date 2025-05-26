@@ -117,3 +117,96 @@ class PaymentProcessor {
     }
 }
 ```
+
+4. Builder 패턴에 대해서 설명해주세요.
+- 복잡한 객체의 생성 과정을 단계별로 나누어, 동일한 생성 절차에서 서로 다른 표현을 만들 수 있게 하는 생성 패턴
+- 특히 생성자에 많은 파라미터가 있을 때, 가독성과 유지보수성 향상
+- 특징 
+    - 필수값과 선택값을 구분해서 객체를 생성할 수 있음
+    - 메서드 체이닝 방식으로 객체 생성 가능
+    - new 키워드 대신 Builder를 통해 유연하게 생성
+
+5. Factory Method 패턴에 대해서 설명해주세요.
+- 객체 생성 코드를 하위 클래스에 위임함으로써 객체 생성을 캡슐화하는 패턴
+- 상위 클래스는 객체 생성 방법만 정의, 실제 인스턴스 생성은 하위 클래스에서 결정
+- 구조
+    - Product: 생성될 객체의 인터페이스
+    - ConcreteProduct: 실제 생성되는 클래스
+    - Creator: 팩토리 메서드를 선언
+    - ConcreteCreator: 팩토리 메서드를 구현하여 객체 생성
+    ```
+        // Product
+        interface Notification {
+            void send();
+        }
+
+        // Concrete Products
+        class EmailNotification implements Notification {
+            public void send() {
+                System.out.println("Sending Email...");
+            }
+        }
+
+        class SmsNotification implements Notification {
+            public void send() {
+                System.out.println("Sending SMS...");
+            }
+        }
+
+        // Creator
+        abstract class NotificationFactory {
+            public abstract Notification createNotification();
+        }
+
+        // Concrete Creator
+        class EmailNotificationFactory extends NotificationFactory {
+            public Notification createNotification() {
+                return new EmailNotification();
+            }
+        }
+
+        // 사용
+        NotificationFactory factory = new EmailNotificationFactory();
+        Notification notification = factory.createNotification();
+        notification.send();  // "Sending Email..."
+    ```
+6. 퍼사드 패턴에 대한 예를 들어주세요.
+- 복잡한 서브시스템을 간단한 인터페이스 하나로 감싸, 사용자가 쉽게 접근할 수 있도록 하는 구조 패턴
+- 서브시스템의 내부 복잡성을 숨기고, 클라이언트는 간단한 API만 사용
+```
+// 복잡한 서브시스템
+class FileReader {
+    void readFile(String filePath) {
+        System.out.println("Reading file: " + filePath);
+    }
+}
+
+class Compressor {
+    void compress(String fileData) {
+        System.out.println("Compressing file data...");
+    }
+}
+
+class Encryptor {
+    void encrypt(String compressedData) {
+        System.out.println("Encrypting compressed data...");
+    }
+}
+
+// 퍼사드 클래스
+class CompressionFacade {
+    private FileReader reader = new FileReader();
+    private Compressor compressor = new Compressor();
+    private Encryptor encryptor = new Encryptor();
+
+    public void compressAndEncrypt(String filePath) {
+        reader.readFile(filePath);
+        compressor.compress("file data");
+        encryptor.encrypt("compressed data");
+    }
+}
+
+// 사용
+CompressionFacade facade = new CompressionFacade();
+facade.compressAndEncrypt("document.txt");
+```
