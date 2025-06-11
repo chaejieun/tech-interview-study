@@ -42,3 +42,26 @@
 | ⚠️ **Payload 노출** | 암호화되지 않고 Base64로 인코딩되어 있어 민감한 정보는 X |
 | ⚠️ **토큰 길이 김**    | 세션 ID보다 상대적으로 크기 때문에 네트워크 부담 가능     |
 | ⚠️ **만료 관리 필요**   | 적절한 `exp` 설정과 리프레시 토큰 관리가 중요        |
+
+
+## 📅 2025/05/30
+### 4. JWT를 사용할 때 발생할 수 있는 보안 문제와 이를 해결하는 방법은 무엇인가요?
+- 문제: 토큰 탈취, 만료 불일치, 클레임 조작
+- 해결: HTTPS 사용, 짧은 만료시간 + Refresh Token, 토큰 저장소 보호 (XSS/CSRF 방지)
+
+### 5. OAuth2.0 인증 플로우를 설명해주세요. OAuth2를 사용할 때 주의해야 할 점은?
+- 인증 플로우
+    - 1. Client에서 Oauth 서버에 Aithorization code 요청합니다.
+    - 2. Oauth 서버는 redirect uri를 통해 Authorization code를 부여합니다.
+    - 3. Client는 Server에 Authorization code를 전달합니다.
+    - 4. Server는 Authorization code를 Oauth 서버에 보내서 Access token을 요청합니다.
+    - 5. Oauth 서버는 Server에 Access token을 부여합니다.
+    - 6. Server는 Client에게 Access token을 전달합니다.
+
+### 6. Session 기반 인증과 Token 기반 인증의 차이는 무엇인가요?
+| 항목  | Session | Token (JWT 등)  |
+| --- | ------- | -------------- |
+| 저장  | 서버 메모리  | 클라이언트 (로컬/쿠키)  |
+| 상태  | 상태 유지   | 무상태            |
+| 확장성 | 낮음      | 높음             |
+| 보안  | 서버 측 보호 | 클라이언트 저장 주의 필요 |
