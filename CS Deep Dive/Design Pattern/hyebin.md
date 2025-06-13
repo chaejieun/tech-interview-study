@@ -210,3 +210,58 @@ class CompressionFacade {
 CompressionFacade facade = new CompressionFacade();
 facade.compressAndEncrypt("document.txt");
 ```
+
+## 📅 2025/06/06
+### 7. Spring에서 Bean의 기본 스코프가 싱글톤인 이유는 무엇인가요?
+- Spring Bean은 기본적으로 컨테이너 내에 단 하나의 인스턴스만 생성되어 재사용
+- 즉, 같은 Bean을 여러 번 주입받아도 동일한 객체가 주입
+- 장점 
+
+    | 이유        | 설명                                                                |
+    | --------- | ----------------------------------------------------------------- |
+    | 메모리 효율성 | 객체를 한 번만 생성해 여러 컴포넌트가 공유 → 메모리 절약                                 |
+    | 성능 향상   | 객체 생성을 매번 하지 않아도 됨 → 초기 생성 이후 빠르게 동작                              |
+    | 의도된 재사용 | 공통된 기능(예: Service, Repository 등)은 상태를 가지지 않고 여러 곳에서 사용되므로 싱글톤이 적절 |
+    | 관리 편의   | Spring Container가 Bean 생명주기를 효율적으로 관리 가능                          |
+- 주의사항 
+    - 상태를 가지는 필드(mutable state)를 갖는 Bean을 싱글톤으로 만들면 스레드 안전 문제가 발생할 수 있음
+    → @Component로 선언된 Bean은 stateless (무상태)하게 설계해야 함
+
+### 8. Repository 패턴의 목적과 장점을 설명하고, 프로젝트에서 JPA와 함께 어떻게 활용했는지 공유해주세요.
+- 도메인 객체와 데이터 접근 로직을 분리하기 위한 추상화 계층
+- 비즈니스 로직은 저장소가 어떻게 구현되었는지 알 필요 없이 CRUD 동작만 정의된 인터페이스를 통해 데이터와 상호작용
+
+    | 목적         | 설명                                             |
+    | ---------- | ---------------------------------------------- |
+    | 추상화     | DB 접근 로직을 감춤으로써 구현체에 독립적인 비즈니스 로직 작성 가능        |
+    | 테스트 용이성 | 인터페이스 기반으로 Mock Repository 주입 가능               |
+    | 유지보수성   | 구현체 변경 시 비즈니스 로직에 영향 없음 (JPA → MongoDB 교체도 가능) |
+
+
+### 9. 옵저버(Observer) 패턴을 언제 사용하는 것이 적절한지 설명하고, 실제 프로젝트에서 활용한 경험이 있다면 말씀해주세요.
+- 한 객체의 상태 변화가 있을 때, 이를 의존하는 여러 객체에게 자동으로 알림을 보내는 디자인 패턴
+- Publisher → Subscriber 구조 (1:N 관계)
+- 사용 예시 
+    - 이벤트 기반 처리: 로그인 → 알림 발송, 로그 기록 등
+    - 비동기/비결합 구조: 구독자가 어떤 방식으로 반응할지 발행자는 몰라도 됨
+    - 상태 변경 감지: 실시간 업데이트, UI 데이터 바인딩 등
+
+```
+// 이벤트 클래스
+public class OrderCreatedEvent extends ApplicationEvent {
+    private final Long orderId;
+    public OrderCreatedEvent(Object source, Long orderId) {
+        super(source);
+        this.orderId = orderId;
+    }
+}
+
+// 이벤트 발행
+applicationEventPublisher.publishEvent(new OrderCreatedEvent(this, orderId));
+
+// 이벤트 리스너
+@EventListener
+public void handleOrderCreated(OrderCreatedEvent event) {
+    emailService.sendOrderConfirmation(event.getOrderId());
+}
+```
