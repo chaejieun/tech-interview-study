@@ -264,3 +264,4 @@ Heap 영역과 Stack 영역은 사실 같은 공간을 공유한다. Heap이 메
 3. 시스템 호출(System Call)
 4. I/O 대기(Waiting for I/O)
 5. 멀티스레딩(Multi-threading)
+
