@@ -536,3 +536,232 @@ public class InsertionSortExample {
 }
 ```
 
+# 📅 2025/06/02
+# 퀵 정렬(Quick Sort)란?
+- 분할 정복 알고리즘의 하나로, 평균적으로 매우 빠른 수행 속도를 자랑하는 정렬 방법
+
+## 동작과정
+1. 리스트 안에 있는 한 요소를 선택한다. 이렇게 고른 원소를 **피벗(pivot)** 이라고 한다.
+2. 피벗을 기준으로 피벗보다 작은 요소들은 모두 피벗의 왼쪽으로 옮겨지고 피벗보다 큰 요소들은 모두 피벗의 오른쪽으로 옮겨진다. (피벗을 중심으로 왼쪽: 피벗보다 작은 요소들, 오른쪽: 피벗보다 큰 요소들)
+3. 피벗을 제외한 왼쪽 리스트와 오른쪽 리스트를 다시 정렬한다.
+- 분할된 부분 리스트에 대하여 **순환 호출** 을 이용하여 정렬을 반복한다.
+- 부분 리스트에서도 다시 피벗을 정하고 피벗을 기준으로 2개의 부분 리스트로 나누는 과정을 반복한다.
+4. 부분 리스트들이 더 이상 분할이 불가능할 때까지 반복한다.
+- 리스트의 크기가 0이나 1이 될 때까지 반복한다
+
+## 시간복잡도
+- O(NlogN)
+
+## 예제
+```java
+public class SimpleQuickSort {
+
+    // 퀵 정렬의 메인 메서드
+    public void quickSort(int[] arr, int low, int high) {
+        if (low < high) {
+            // 피벗을 기준으로 배열을 분할하고 피벗의 최종 위치를 받아요.
+            int pi = partition(arr, low, high);
+
+            // 피벗 왼쪽 부분과 오른쪽 부분을 각각 재귀적으로 정렬합니다.
+            quickSort(arr, low, pi - 1);
+            quickSort(arr, pi + 1, high);
+        }
+    }
+
+    // 배열을 분할하는 메서드 (피벗 기준 왼쪽은 작은 값, 오른쪽은 큰 값)
+    private int partition(int[] arr, int low, int high) {
+        // 가장 오른쪽 원소를 피벗으로 선택 (다양한 피벗 선택 전략이 있어요)
+        int pivot = arr[high];
+        int i = (low - 1); // 피벗보다 작은 값들의 '경계' 인덱스
+
+        for (int j = low; j < high; j++) {
+            if (arr[j] <= pivot) {
+                i++;
+                swap(arr, i, j); // 피벗보다 작거나 같으면 왼쪽으로 이동
+            }
+        }
+        swap(arr, i + 1, high); // 피벗을 최종 위치에 놓습니다.
+        return i + 1; // 피벗의 최종 위치를 반환
+    }
+
+    // 두 원소의 위치를 바꾸는 헬퍼 메서드
+    private void swap(int[] arr, int i, int j) {
+        int temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+    }
+
+    // 예제 실행
+    public static void main(String[] args) {
+        int[] data = {5, 3, 8, 4, 2, 7, 1, 6};
+        System.out.print("정렬 전: ");
+        for (int n : data) System.out.print(n + " ");
+
+        new SimpleQuickSort().quickSort(data, 0, data.length - 1);
+
+        System.out.print("\n정렬 후: ");
+        for (int n : data) System.out.print(n + " ");
+        System.out.println();
+    }
+}
+```
+
+
+# 병합 정렬(Merge Sort)란?
+- 병합 정렬은 **분할 정복(Divide and Conquer)** 알고리즘의 하나로, 리스트를 절반으로 계속 나누고(분할), 나뉜 부분들을 각각 정렬한 뒤(정복), 다시 합치면서(결합) 전체 리스트를 정렬하는 방식입니다.
+
+## 동작과정
+1. 분할(Divide): 정렬할 리스트를 두 개의 거의 같은 크기의 부분 리스트로 나눕니다. 이 과정을 각 부분 리스트의 크기가 1이 될 때까지 재귀적으로 반복합니다. (크기가 1인 리스트는 그 자체로 정렬된 것으로 간주합니다.)
+2. 정복(Conquer): 분할된 각 부분 리스트에 대해 재귀적으로 병합 정렬을 수행합니다.
+3. 결합(Combine) / 병합(Merge): 정렬된 두 개의 부분 리스트를 하나의 정렬된 리스트로 합칩니다. 이 과정에서 두 부분 리스트의 원소들을 비교하여 정렬된 순서대로 새로운(임시) 배열에 저장하고, 다시 원래 배열로 복사합니다.
+
+## 시간복잡도
+- O(NlogN)
+
+## 예제
+```java
+import java.util.Arrays; // 배열 출력을 위해 임포트
+
+public class MergeSort {
+
+    /**
+     * 병합 정렬의 메인 함수
+     * @param arr 정렬할 배열
+     */
+    public void mergeSort(int[] arr) {
+        // 배열이 비어있거나 원소가 하나 이하면 정렬할 필요가 없음
+        if (arr == null || arr.length <= 1) {
+            return;
+        }
+        // 실제로 정렬을 수행하는 재귀 호출 시작
+        // 임시 배열을 미리 생성하여 재귀 호출마다 생성하는 오버헤드를 줄임
+        mergeSort(arr, new int[arr.length], 0, arr.length - 1);
+    }
+
+    /**
+     * 재귀적으로 배열을 분할하고 정렬하는 함수
+     * @param arr 원본 배열
+     * @param temp 임시 저장 공간 (병합 시 사용)
+     * @param low 배열의 시작 인덱스
+     * @param high 배열의 끝 인덱스
+     */
+    private void mergeSort(int[] arr, int[] temp, int low, int high) {
+        // 정렬할 부분 배열의 크기가 1이 될 때까지 분할
+        if (low < high) {
+            // 중간 지점 계산
+            int mid = low + (high - low) / 2; // (low + high) / 2 와 같지만 오버플로우 방지
+
+            // 왼쪽 부분 배열 재귀적으로 정렬
+            mergeSort(arr, temp, low, mid);
+            // 오른쪽 부분 배열 재귀적으로 정렬
+            mergeSort(arr, temp, mid + 1, high);
+
+            // 정렬된 두 부분 배열을 병합
+            merge(arr, temp, low, mid, high);
+        }
+    }
+
+    /**
+     * 두 개의 정렬된 부분 배열을 하나의 정렬된 배열로 병합하는 함수
+     * @param arr 원본 배열
+     * @param temp 임시 저장 공간 (병합 시 사용)
+     * @param low 첫 번째 부분 배열의 시작 인덱스
+     * @param mid 첫 번째 부분 배열의 끝 인덱스 (두 번째 부분 배열의 시작 - 1)
+     * @param high 두 번째 부분 배열의 끝 인덱스
+     */
+    private void merge(int[] arr, int[] temp, int low, int mid, int high) {
+        // 병합할 부분 배열의 원소들을 임시 배열에 복사
+        // System.arraycopy(원본 배열, 원본 시작 인덱스, 대상 배열, 대상 시작 인덱스, 복사할 길이)
+        System.arraycopy(arr, low, temp, low, high - low + 1);
+
+        int i = low;       // 왼쪽 부분 배열의 시작 인덱스
+        int j = mid + 1;   // 오른쪽 부분 배열의 시작 인덱스
+        int k = low;       // 병합된 결과를 저장할 원본 배열의 시작 인덱스
+
+        // 두 부분 배열을 비교하여 원본 배열에 정렬된 순서로 채워넣음
+        while (i <= mid && j <= high) {
+            if (temp[i] <= temp[j]) { // 안정 정렬을 위해 '작거나 같을 때' 사용
+                arr[k] = temp[i];
+                i++;
+            } else {
+                arr[k] = temp[j];
+                j++;
+            }
+            k++;
+        }
+
+        // 왼쪽 부분 배열에 남은 원소가 있다면 모두 복사
+        while (i <= mid) {
+            arr[k] = temp[i];
+            i++;
+            k++;
+        }
+
+        // (오른쪽 부분 배열에 남은 원소가 있다면 모두 복사 - 필요 없음, 이미 그 자리에 있으므로)
+        // 사실 이 부분은 필요 없을 수도 있음. 왜냐하면, 오른쪽 배열의 남은 원소들은 이미 제자리에 있거나
+        // 아니면 다음 비교에서 남은 원소들이기 때문.
+        // 하지만 명시적으로 작성하는 경우도 있음:
+        // while (j <= high) {
+        //     arr[k] = temp[j];
+        //     j++;
+        //     k++;
+        // }
+    }
+
+    // 메인 함수 (예제 실행)
+    public static void main(String[] args) {
+        int[] arr1 = {12, 11, 13, 5, 6, 7};
+        System.out.println("정렬 전 배열 1: " + Arrays.toString(arr1));
+
+        MergeSort sorter = new MergeSort();
+        sorter.mergeSort(arr1);
+        System.out.println("정렬 후 배열 1: " + Arrays.toString(arr1));
+        System.out.println("------------------------------------");
+
+        int[] arr2 = {38, 27, 43, 3, 9, 82, 10};
+        System.out.println("정렬 전 배열 2: " + Arrays.toString(arr2));
+        sorter.mergeSort(arr2);
+        System.out.println("정렬 후 배열 2: " + Arrays.toString(arr2));
+    }
+}
+```
+
+
+# 힙 정렬(Heap Sort)란?
+- 힙 정렬은 **힙(Heap)**이라는 특수한 자료구조를 활용하여 정렬을 수행하는 알고리즘입니다. 힙은 완전 이진 트리 형태를 가지며, 항상 부모 노드의 값이 자식 노드의 값보다 크거나(최대 힙) 작거나(최소 힙) 같다는 규칙을 유지합니다. 힙 정렬은 주로 **최대 힙(Max Heap)**을 사용하여 정렬합니다.
+
+## 힙 정렬의 핵심 아이디어
+- **완전 이진 트리**의 일종으로 우선순위 큐를 위하여 만들어진 자료구조
+- 최댓값, 최솟값을 쉽게 추출할 수 있는 자료구조
+
+## 동작방식
+- 내림차순 정렬을 위해서는 최대 힙을 구성하고 오름차순 정렬을 위해서는 최소 힙을 구성하면 된다.
+
+1. 정렬해야 할 n개의 요소들로 최대 힙(완전 이진 트리 형태)을 만든다.
+    - 내림차순을 기준으로 정렬
+2. 그 다음으로 한 번에 하나씩 요소를 힙에서 꺼내서 배열의 뒤부터 저장하면 된다.
+3. 삭제되는 요소들(최댓값부터 삭제)은 값이 감소되는 순서로 정렬되게 된다.
+니다.
+
+## 시간복잡도
+- O(NlogN)
+
+## 예제
+```c
+/* 현재 요소의 개수가 heap_size인 힙 h에 item을 삽입한다. */
+// 최대 힙(max heap) 삽입 함수
+void insert_max_heap(HeapType *h, element item){
+  int i;
+  i = ++(h->heap_size); // 힙 크기를 하나 증가
+
+  /* 트리를 거슬러 올라가면서 부모 노드와 비교하는 과정 */
+  // i가 루트 노트(index: 1)이 아니고, 삽입할 item의 값이 i의 부모 노드(index: i/2)보다 크면
+  while((i != 1) && (item.key > h->heap[i/2].key)){
+    // i번째 노드와 부모 노드를 교환환다.
+    h->heap[i] = h->heap[i/2];
+    // 한 레벨 위로 올라단다.
+    i /= 2;
+  }
+  h->heap[i] = item; // 새로운 노드를 삽입
+}
+```
