@@ -874,3 +874,194 @@ void insert_max_heap(HeapType *h, element item){
 - start = 5, end = 6
 - mid = (5 + 6) // 2 = 5
 - arr[5] = 23. 23 == 23 이므로, 탐색 성공! 인덱스 5 반환.
+
+
+# 📅 2025/07/02
+# 해시 테이블 구현
+- 해시 테이블은 키(Key)를 해시 함수(Hash Function)을 통해 고유한 인덱스로 변환하고, 해당 인덱스에 값을 저장하는 자료구조 형식
+- 충돌 처리 방식은 **체이닝 방식**을 사용
+- 체이닝 방식이란? 같은 인덱스에 여러 값을 저장할 수 있도록, 배열 요소를 리스트(LinkedList)로 만든 것
+
+
+```java
+import java.util.LinkedList;
+
+class HashTable {
+    private class Entry {
+        String key;
+        String value;
+        Entry(String key, String value) {
+            this.key = key;
+            this.value = value;
+        }
+    }
+
+    private final int SIZE = 10;
+    private LinkedList<Entry>[] table;
+
+    public HashTable() {
+        table = new LinkedList[SIZE];
+        for (int i = 0; i < SIZE; i++)
+            table[i] = new LinkedList<>();
+    }
+
+    private int hash(String key) {
+        return Math.abs(key.hashCode()) % SIZE;
+    }
+
+    public void put(String key, String value) {
+        int idx = hash(key);
+        for (Entry e : table[idx]) {
+            if (e.key.equals(key)) {
+                e.value = value; // 업데이트
+                return;
+            }
+        }
+        table[idx].add(new Entry(key, value));
+    }
+
+    public String get(String key) {
+        int idx = hash(key);
+        for (Entry e : table[idx]) {
+            if (e.key.equals(key))
+                return e.value;
+        }
+        return null;
+    }
+
+    public void remove(String key) {
+        int idx = hash(key);
+        table[idx].removeIf(e -> e.key.equals(key));
+    }
+}
+```
+
+# 최장 증가 수열(LIS)란?
+- **어떤 수열이 주어졌을 때, 그 안에서 값이 점점 커지는 부분 수열 중 가장 긴 것**을 의미.
+- **부분 수열**은 원래 순서를 유지하면서 몇 개의 숫자를 골라낸 걸 의미
+
+## 예시
+- 입력 수열: [10, 20, 10, 30, 20, 50]
+- 이 수열에서 증가하는 부분 수열 중 가장 긴 것은: [10, 20, 30, 50]
+- 길이 = 4
+
+## 핵심 조건
+- 수열은 연속일 필요는 없음
+- 항상 순서는 지켜야 함
+- 값은 오름차순 (같은 값 제외)
+
+# LIS 알고리즘 - DP방식(O(n²))
+```java
+public class LIS {
+    public static int findLIS(int[] arr) {
+        int n = arr.length;
+        int[] dp = new int[n];
+        int maxLength = 1;
+
+        for (int i = 0; i < n; i++) {
+            dp[i] = 1; // 자기 자신만 포함하는 경우
+            for (int j = 0; j < i; j++) {
+                if (arr[j] < arr[i]) {
+                    dp[i] = Math.max(dp[i], dp[j] + 1);
+                }
+            }
+            maxLength = Math.max(maxLength, dp[i]);
+        }
+
+        return maxLength;
+    }
+
+    public static void main(String[] args) {
+        int[] arr = {10, 20, 10, 30, 20, 50};
+        System.out.println("LIS 길이: " + findLIS(arr)); // 4
+    }
+}
+```
+
+# 최소 공통 조상(LCA)란?
+- **LCA (Lowest Common Ancestor)**란 트리(Tree)에서 두 노드의 **공통된 조상 중 가장 가까운 조상 노드**를 의미
+
+
+    1
+  /   \
+ 2     3
+/ \   / \
+4 5  6   7
+
+- `LCA(4, 5)` → 2  
+- `LCA(4, 6)` → 1  
+- `LCA(6, 7)` → 3
+
+## 🧠 특징
+- **트리 자료구조** 기반
+- 두 노드의 **경로 중 만나는 지점** 중 가장 가까운 조상 노드
+- 루트부터 내려가면서 **처음으로 갈라지는 지점**
+
+## 💻 Java 코드 예시
+
+```java
+import java.util.*;
+
+public class LCA {
+    static int MAX = 10001;
+    static List<Integer>[] tree = new ArrayList[MAX];
+    static int[] parent = new int[MAX];      // 부모 정보
+    static int[] depth = new int[MAX];       // 깊이 정보
+    static boolean[] visited = new boolean[MAX];
+
+    // 트리 초기화
+    public static void init(int n) {
+        for (int i = 1; i <= n; i++) {
+            tree[i] = new ArrayList<>();
+        }
+    }
+
+    // DFS로 parent, depth 배열 채우기
+    public static void dfs(int curr, int d) {
+        visited[curr] = true;
+        depth[curr] = d;
+
+        for (int next : tree[curr]) {
+            if (!visited[next]) {
+                parent[next] = curr;
+                dfs(next, d + 1);
+            }
+        }
+    }
+
+    // 최소 공통 조상 찾기
+    public static int findLCA(int a, int b) {
+        // 깊이를 같게 맞춤
+        while (depth[a] > depth[b]) a = parent[a];
+        while (depth[b] > depth[a]) b = parent[b];
+
+        // 동시에 올라가며 공통 조상 탐색
+        while (a != b) {
+            a = parent[a];
+            b = parent[b];
+        }
+
+        return a;
+    }
+
+    public static void main(String[] args) {
+        int n = 7; // 노드 수
+        init(n);
+
+        // 트리 연결
+        tree[1].add(2); tree[2].add(1);
+        tree[1].add(3); tree[3].add(1);
+        tree[2].add(4); tree[4].add(2);
+        tree[2].add(5); tree[5].add(2);
+        tree[3].add(6); tree[6].add(3);
+        tree[3].add(7); tree[7].add(3);
+
+        // 전처리 실행
+        dfs(1, 0);
+
+        // LCA 테스트
+        System.out.println("LCA(4, 5): " + findLCA(4, 5)); // 2
+        System.out.println("LCA(4, 6): " + findLCA(4, 6)); // 1
+        System.out.println("LCA(6, 7): " + findLCA(6, 7)); // 3
+    }
+}
