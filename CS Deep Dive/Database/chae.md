@@ -301,3 +301,69 @@ ex) Neo4j
 - 필드 (Field): 문서의 속성으로, 관계형 데이터베이스의 '열(Column)'과 유사합니다.
 - 샤드 (Shard): 인덱스는 여러 개의 샤드로 분할될 수 있습니다. 각 샤드는 독립적인 Lucene 인덱스이며, 클러스터 내의 다른 노드에 분산 저장되어 병렬 처리 및 확장성을 제공합니다.
 - 복제본 (Replica): 샤드의 복사본으로, 노드 장애 시 데이터의 안정성을 보장하고, 읽기 요청에 대한 부하 분산을 돕습니다.
+
+# 📅 2025/08/04
+# Elastic Search의 인덱스구조와 RDBMS의 인덱스 구조의 차이에 대해 설명해주세요
+
+# Elasticsearch vs RDBMS 인덱스 구조 비교
+Elasticsearch와 RDBMS는 모두 "인덱스"라는 개념을 사용하지만, 그 구조와 목적, 동작 방식은 매우 다릅니다. 이 문서에서는 이 둘의 인덱스 구조를 비교하여 정리합니다.
+
+
+## 📌 인덱스 구조 개요
+
+| 항목 | Elasticsearch | RDBMS |
+|------|----------------|--------|
+| 인덱스(Index)의 의미 | 문서(Document)의 모음 (테이블 개념) | 특정 컬럼의 빠른 조회를 위한 자료구조 |
+| 기본 저장 단위 | 문서 (JSON 기반) | 행(Row), 고정된 스키마 |
+| 저장 구조 | **역색인 (Inverted Index)** | **B-Tree 또는 Hash 인덱스** |
+| 검색 최적화 대상 | Full-text 검색 (자연어 중심) | 키 기반 조회 및 범위 검색 |
+| 내부 구성 | Index → Shard → Segment → Inverted Index | Table → Index (B-Tree 등) |
+| 데이터 갱신 | Append-only 구조 + 병합 필요 | 즉시 반영 (업데이트/삭제) |
+| 강점 | 텍스트 검색, 유연한 분석 | 정합성, 트랜잭션, 정확한 키 검색 |
+
+## 🔍 인덱스 개념 차이
+
+### RDBMS 인덱스
+- 테이블의 컬럼에 추가로 생성되는 자료구조
+- `CREATE INDEX` 구문으로 생성
+- 검색, 정렬, JOIN 성능 향상
+
+### Elasticsearch 인덱스
+- 전체 데이터 저장 단위 (테이블 개념)
+- 내부적으로 역색인을 구성하여 텍스트 분석 최적화
+- 유연한 검색 분석 (형태소 분석, 유사어, 자동완성 등)
+
+# Elastic Search의 키워드 검색과 RDBMS의 LIKE 검색의 차이에 대해 설명해주세요
+
+# Elasticsearch `keyword` 검색 vs RDBMS `LIKE` 검색
+Elasticsearch와 RDBMS는 문자열 검색을 위한 기능을 제공하지만, 그 방식과 성능, 목적은 다릅니다. 이 문서는 `keyword` 검색과 `LIKE` 검색의 차이를 간단하게 비교합니다.
+
+### 🔍 개념 비교
+
+| 항목 | Elasticsearch `keyword` | RDBMS `LIKE` |
+|------|--------------------------|----------------|
+| 검색 대상 | 분석기 미적용 원문 필드 | 문자열 컬럼 (varchar 등) |
+| 검색 방식 | 정확한 문자열 일치 | 패턴 매칭 (`%`, `_`) |
+| 내부 구조 | 역색인 (Inverted Index) | B-Tree 또는 테이블 스캔 |
+| 대소문자 구분 | 기본적으로 구분함 | DB 설정에 따라 다름 |
+| 성능 | 매우 빠름 (정확도 기반) | `%값%` 사용 시 성능 저하 |
+
+---
+
+### Elasticsearch (`keyword`) 사용 예시
+```json
+{
+  "query": {
+    "term": {
+      "username.keyword": "채채"
+    }
+  }
+}
+```
+
+### RDBMS (`LIKE`) 사용 예시
+-- 정확 일치
+SELECT * FROM users WHERE username = '채채';
+
+-- 포함 검색
+SELECT * FROM users WHERE username LIKE '%채채%';
