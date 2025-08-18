@@ -317,3 +317,94 @@
     - HTTP `Referer` 헤더를 검사하여 요청이 신뢰할 수 있는 Origin에서 왔는 지 확인하는 방법
 4. CAPTCHA 또는 One-Time Password (OTP)
     - 매우 민감한 작업에 추가적인 사용자 인증을 요구하는 방법 
+
+
+# 📅 2025/08/18
+# XSS(Cross-Site Scripting) 공격은 무엇이며, 이를 방어하는 방법은 무엇인가요?
+- XSS(Cross-Site Scripting)이란 **웹 애플리케이션이 사용자 입력을 제대로 검증하지 않고 출력할 때 발생하는 보안 취약점**
+
+## XSS 공격의 종류
+1. Stored XSS (저장형)
+- 악성 스크립트가 DB 등에 저장되어 다수의 사용자에게 노출되는 방식
+
+2. Reflected XSS (반사형)
+- URL 파라미터 등을 통해 전달된 악성 입력이 바로 응답에 반영되어 실행됨
+
+3. DOM-based XSS 
+- 서버가 아닌 브라우저 내 자바스크립트 코드에서 DOM 조작 시 발생
+
+## XSS 방어 방법
+1. 입력 검증 (Input Validation)
+- 화이트리스트 기반 검증 사용 
+- HTML 태그나 Javascript 실행 코드가 들어오지 못하도록 필터링
+
+2. 출력 인코딩 (Output Encoding / Escaping)
+- JavaScript 컨텍스트에 출력 시 `'`,`"` 적절히 이스케이프
+- OWASP ESAPI 또는 Spring Security 같은 라이브러리 활용
+
+3. CSP(Content Security Policy) 적용
+- 브라우저가 특정 스크립트만 실행하도록 정책 설정
+
+4. 쿠키 보안 설정
+- `HttpOnly` 속성 : 자바스크립트에서 쿠키 접근 불가
+- `Secure` 속성 : HTTPS 에서만 전송
+- `SameSite` 속성 : CSRF와 결합 방지
+
+5. 프레임워크 내장 보안 기능 활용
+- Spring Security : 기본적으로 XSS 방어 기능 제공
+- React/Vue/Angular : 데이터 바인딩 시 자동으로 XSS 방어 
+
+
+# SQL Injection 공격은 무엇이고, 이를 방어하는 방법은 무엇인가요?
+- SQL Injection (SQL 주입)은 **애플리케이션이 사용자 입력을 제대로 검증하지 않고 SQL 쿼리에 직접 삽입하는 경우 발생하는 보안 취약점**
+
+## SQL Injection 방어 방법
+1. Prepared Statement(=Parameterized Query) 사용
+- SQL을 먼저 컴파일하고, 파라미터는 바인딩만 수행 (쿼리 조작 불가능!)
+
+2. ORM 사용(JPA, Hibernate 등)
+- 엔티티 기반 쿼리로 SQL 직접 작성 최소화
+- 단, `createNativeQuery()` 사용 시는 여전히 주의 필요
+
+3. 입력값 검증
+- 화이트리스트 기반 검증(숫자만 들어와야 하는 곳은 정규식 숫자만 허용)
+- 블랙리스트(특수문자 필터링) 방식은 완전하지 않음
+
+4. 최소 권한 원칙
+- DB 계정 권한 최소화(읽기/쓰기만 허용, DROP/ALTER 금지)
+- 앱 계정과 관리자 계정 분리
+
+5. 에러 메세지 노출 금지
+- SQL 오류 메시지를 사용자에게 직접 노출하지 않기
+- 공격자에게 DB 구조나 쿼리 정보를 주는 꼴이 됨
+
+
+# RESTful API 설계 규칙을 설명해주세요. 리소스 네이밍 규칙에는 어떤 것들이 있나요?
+
+# RESTful API 설계 규칙
+1. 자원의 표현(Resource Oriented)
+- 모든 것은 "자원(Resource)"로 보고, 고유한 URI를 부여
+- ex) /users/1/orders/5
+
+2. HTTP 메서드 활용
+- `GET` - 조회
+- `POST` - 생성
+- `PUT` - 전체 수정
+- `PATCH` - 부분 수정
+- `DELETE` - 삭제
+
+3. 무상태성(Stateless)
+- 서버는 클라이언트 상태를 세션에 저장하지 않는다
+- 요청에 필요한 모든 정보를 포함해야 한다
+
+4. 일관성 있는 응답 구조
+- 성공/실패 여부를 HTTP 상태 코드로 표현
+- `200 ok`, `201 created`, `400 bad request`, `404 not found`, `500 interval server error` 등
+- 응답 바디는 JSON/XML을 사용하고 일관성 유지
+
+5. 계층 구조 활용
+- 리소스 간 관계를 계층적으로 표현한다
+- `/uesre/{userId}/orders`
+
+6. Self-descriptive (자체 표현)
+- API 요청과 응답만으로도 충분히 의미를 이해할 수 있어야 한다 
